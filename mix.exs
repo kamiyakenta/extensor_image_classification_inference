@@ -52,6 +52,11 @@ defmodule ExtensorInference.MixProject do
       {:nerves_system_rpi3a, "~> 1.6", runtime: false, targets: :rpi3a},
       {:nerves_system_bbb, "~> 2.0", runtime: false, targets: :bbb},
       {:nerves_system_x86_64, "~> 1.6", runtime: false, targets: :x86_64},
+      {:extensor, "~> 0.1"},
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:dotenv, "~> 3.0"},
+      {:poison, "~> 4.0"},
+      {:mogrify, "~> 0.7.2"},
     ]
   end
 end
