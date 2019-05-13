@@ -15,15 +15,15 @@ defmodule ExtensorInference do
     io_infos = io_json_path |> File.read!() |> Poison.decode!()
     input_info = Enum.at(io_infos["input"], 0)
     output_info = Enum.at(io_infos["output"], 0)
-    resize_height = Enum.at(io_infos["inputShape"], 1)
-    resize_width = Enum.at(io_infos["inputShape"], 2)
+    input_height = Enum.at(io_infos["inputShape"], 1)
+    input_width = Enum.at(io_infos["inputShape"], 2)
     # output_size = Enum.at(io_infos["outputShape"], 1)
 
     # model(graph)の準備
     graph = Et.Session.load_frozen_graph!(model_path)
 
     # input(image)の準備
-    Mf.open(image_path) |> Mf.resize("#{resize_height}x#{resize_width}") |> Mf.save(in_place: true)
+    Mf.open(image_path) |> Mf.resize("#{input_height}x#{input_width}") |> Mf.save(in_place: true)
     li2 = for _n <- 1..256, do: [0.80, 0.45, 0.34]
     li3 = for _n <- 1..256, do: li2
     li4 = [li3]
