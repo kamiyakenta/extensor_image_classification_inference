@@ -26,7 +26,7 @@ defmodule ExtensorInference do
     Mf.open(image_path) |> Mf.resize("#{resize_height}x#{resize_width}") |> Mf.save(in_place: true)
     li2 = for _n <- 1..256, do: [0.80, 0.45, 0.34]
     li3 = for _n <- 1..256, do: li2
-    li4 = for _n <- 1, do: li3
+    li4 = [li3]
     input_tensor = %{
       input_info => Extensor.Tensor.from_list(li4)
     }
