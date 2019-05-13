@@ -1,6 +1,7 @@
 defmodule ExtensorInference do
   alias Extensor, as: Et
   alias Mogrify, as: Mf
+  alias Imagineer, as: Im
 
   def load_label(label_file_path) do
     file = File.read!(label_file_path)
@@ -23,19 +24,18 @@ defmodule ExtensorInference do
 
     # input(image)の準備  (shape: {1, 256, 256, 3}, type: :floatにする)
     Mf.open(image_path) |> Mf.resize("#{input_height}x#{input_width}") |> Mf.save(in_place: true)
-    list2d = for _n <- 1..256, do: [0.80, 0.45, 0.34]
-    list3d = for _n <- 1..256, do: list2d
-    list4d = [list3d]
+    {:ok, image} = Im.load(image_path)
+    image_pixels = image.pixels
     input_tensor = %{
-      input_info => Et.Tensor.from_list(list4d)
+      input_info => Et.Tensor.from_list(image_pixels)
     }
-    # {:ok, image} = File.read(image_path)
+
+    # ダミーデータ
+    # list2d = for _n <- 1..256, do: [0.80, 0.45, 0.34]
+    # list3d = for _n <- 1..256, do: list2d
+    # list4d = [list3d]
     # input_tensor = %{
-    #   input_info => %Extensor.Tensor{
-    #     data: image,
-    #     shape: {1, 256, 256, 3},
-    #     type: :float
-    #   }
+    #   input_info => Et.Tensor.from_list(list4d)
     # }
 
     # 実行
@@ -54,7 +54,7 @@ defmodule ExtensorInference do
   def execute_inference do
     model_path = "./pre_trained_model/model.pb"
     label_file_path = "./labels.txt"
-    image_path = "./images/image.jpg"
+    image_path = "./images/image.png"
     output_path = "./output.txt"
     inference(model_path, label_file_path, image_path, output_path)
   end
