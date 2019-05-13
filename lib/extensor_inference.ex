@@ -23,12 +23,15 @@ defmodule ExtensorInference do
 
     # input(image)の準備
     Mf.open(image_path) |> Mf.resize("#{resize_height}x#{resize_width}") |> Mf.save(in_place: true)
-
-
-    # outputの準備
+    input_tensor = %{
+      input => Extensor.Tensor.from_list([3, 5])
+    }
 
     # 実行
+    output_run_session = Extensor.Session.run!(graph, input_tensor, [output])
 
+    # outputの準備
+    prob_tensor_results = Extensor.Tensor.to_list(output_run_session[output])
 
     # 結果のファイル出力
     column_list = load_label(label_file_path)
