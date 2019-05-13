@@ -23,11 +23,11 @@ defmodule ExtensorInference do
 
     # input(image)の準備  (shape: {1, 256, 256, 3}, type: :floatにする)
     Mf.open(image_path) |> Mf.resize("#{input_height}x#{input_width}") |> Mf.save(in_place: true)
-    li2 = for _n <- 1..256, do: [0.80, 0.45, 0.34]
-    li3 = for _n <- 1..256, do: li2
-    li4 = [li3]
+    list2d = for _n <- 1..256, do: [0.80, 0.45, 0.34]
+    list3d = for _n <- 1..256, do: list2d
+    list4d = [list3d]
     input_tensor = %{
-      input_info => Et.Tensor.from_list(li4)
+      input_info => Et.Tensor.from_list(list4d)
     }
 
     # 実行
