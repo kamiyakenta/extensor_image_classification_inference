@@ -13,25 +13,26 @@ defmodule ExtensorInference do
     # io.jsonの読み込み
     io_json_path = "./pre_trained_model/io.json"
     io_infos = io_json_path |> File.read!() |> Poison.decode!()
-    input = Enum.at(io_infos["input"], 0)
-    output = Enum.at(io_infos["output"], 0)
+    input_info = Enum.at(io_infos["input"], 0)
+    output_info = Enum.at(io_infos["output"], 0)
     resize_height = Enum.at(io_infos["inputShape"], 1)
     resize_width = Enum.at(io_infos["inputShape"], 2)
     output_size = Enum.at(io_infos["outputShape"], 1)
 
     # model(graph)の準備
+    graph = Extensor.Session.load_frozen_graph!(model_path)
 
     # input(image)の準備
     Mf.open(image_path) |> Mf.resize("#{resize_height}x#{resize_width}") |> Mf.save(in_place: true)
     input_tensor = %{
-      input => Extensor.Tensor.from_list([3, 5])
+      input_info => Extensor.Tensor.from_list([3, 5])
     }
 
     # 実行
-    output_run_session = Extensor.Session.run!(graph, input_tensor, [output])
+    output_run_session = Extensor.Session.run!(graph, input_tensor, [output_info])
 
     # outputの準備
-    prob_tensor_results = Extensor.Tensor.to_list(output_run_session[output])
+    prob_tensor_results = Extensor.Tensor.to_list(output_run_session[output_info])
 
     # 結果のファイル出力
     column_list = load_label(label_file_path)
