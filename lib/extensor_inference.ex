@@ -17,7 +17,7 @@ defmodule ExtensorInference do
     output_info = Enum.at(io_infos["output"], 0)
     resize_height = Enum.at(io_infos["inputShape"], 1)
     resize_width = Enum.at(io_infos["inputShape"], 2)
-    output_size = Enum.at(io_infos["outputShape"], 1)
+    # output_size = Enum.at(io_infos["outputShape"], 1)
 
     # model(graph)の準備
     graph = Extensor.Session.load_frozen_graph!(model_path)
