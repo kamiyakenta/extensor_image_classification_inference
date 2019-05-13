@@ -57,6 +57,7 @@ defmodule ExtensorInference.MixProject do
       {:dotenv, "~> 3.0"},
       {:poison, "~> 4.0"},
       {:mogrify, "~> 0.7.2"},
+      {:imagineer, "~> 0.3.3"},
     ]
   end
 end

@@ -1,4 +1,5 @@
 %{
+  "apex": {:hex, :apex, "1.0.0", "abf230314d35ca4c48a902f693247f190ad42fc14862b9c4f7dbb7077b21c20a", [:mix], [], "hexpm"},
   "artificery": {:hex, :artificery, "0.4.1", "90b1fcedb9034853b36dbea2174f9fc1172bd50b0686a723178103def5c9c1c8", [:mix], [], "hexpm"},
   "dialyxir": {:hex, :dialyxir, "0.5.1", "b331b091720fd93e878137add264bac4f644e1ddae07a70bf7062c7862c4b952", [:mix], [], "hexpm"},
   "distillery": {:hex, :distillery, "2.0.12", "6e78fe042df82610ac3fa50bd7d2d8190ad287d120d3cd1682d83a44e8b34dfb", [:mix], [{:artificery, "~> 0.2", [hex: :artificery, repo: "hexpm", optional: false]}], "hexpm"},
@@ -7,6 +8,7 @@
   "elixir_make": {:hex, :elixir_make, "0.5.2", "96a28c79f5b8d34879cd95ebc04d2a0d678cfbbd3e74c43cb63a76adf0ee8054", [:mix], [], "hexpm"},
   "extensor": {:hex, :extensor, "0.1.6", "f18b3b43ab74b702313a496dae6b2ec0342abf6e177976e575c4e5d23c7f13c9", [:mix], [{:elixir_make, "~> 0.4", [hex: :elixir_make, repo: "hexpm", optional: false]}, {:google_protos, "~> 0.1", [hex: :google_protos, repo: "hexpm", optional: false]}, {:matrex, "~> 0.6", [hex: :matrex, repo: "hexpm", optional: true]}, {:protobuf, "~> 0.5.3", [hex: :protobuf, repo: "hexpm", optional: false]}], "hexpm"},
   "google_protos": {:hex, :google_protos, "0.1.0", "c6b9e12092d17571b093d4156d004494ca143b65dbbcbfc3ffff463ea03467c0", [:mix], [{:protobuf, "~> 0.5", [hex: :protobuf, repo: "hexpm", optional: false]}], "hexpm"},
+  "imagineer": {:hex, :imagineer, "0.3.3", "dcb170babf9003dcb9c636c3b6c1f73cd4cee84239bd2743039cced73a4c4c02", [:mix], [{:apex, "~>1.0.0", [hex: :apex, repo: "hexpm", optional: false]}], "hexpm"},
   "mdns": {:hex, :mdns, "1.0.2", "c8228dd44d3fdd55e9842cb7111c9145f2eeaa8b7adac75012ee0e250962215e", [:mix], [{:dns, "~> 2.0", [hex: :dns, repo: "hexpm", optional: false]}], "hexpm"},
   "mogrify": {:hex, :mogrify, "0.7.2", "4d00b60288e338028e2af4cccff9b0da365d83b7e5da52e58fb2de513ef5fedd", [:mix], [], "hexpm"},
   "nerves": {:hex, :nerves, "1.4.4", "7d2d6c0129d541e12ed12117ae059e7db8849faaefc4b4d30f4af55ba6f8d089", [:mix], [{:distillery, "2.0.12", [hex: :distillery, repo: "hexpm", optional: false]}, {:jason, "~> 1.0", [hex: :jason, repo: "hexpm", optional: true]}], "hexpm"},

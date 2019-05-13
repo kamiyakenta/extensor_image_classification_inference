@@ -29,6 +29,14 @@ defmodule ExtensorInference do
     input_tensor = %{
       input_info => Et.Tensor.from_list(list4d)
     }
+    # {:ok, image} = File.read(image_path)
+    # input_tensor = %{
+    #   input_info => %Extensor.Tensor{
+    #     data: image,
+    #     shape: {1, 256, 256, 3},
+    #     type: :float
+    #   }
+    # }
 
     # 実行
     output_run_session = Et.Session.run!(graph, input_tensor, [output_info])
