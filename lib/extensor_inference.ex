@@ -31,9 +31,8 @@ defmodule ExtensorInference do
     # model(graph)の準備
     graph = Et.Session.load_frozen_graph!(model_path)
 
-    # input(image)の準備  (shape: {1, 256, 256, 3}, type: :floatにする)
+    # input(image)の準備  (shape: {1, 256, 256, 3}, type: :float)
     Mf.open(image_path) |> Mf.resize("#{input_height}x#{input_width}") |> Mf.save(in_place: true)
-    IO.puts convert_image(image_path)
     {:ok, image} = Im.load(convert_image(image_path))
     normalized_image_list = for image_pixels_width <- image.pixels, do: Enum.map(image_pixels_width, fn(pixel) -> Tuple.to_list(pixel) |> Enum.map(fn(x) -> x/255 end) end)
     image_pixels = [normalized_image_list]
