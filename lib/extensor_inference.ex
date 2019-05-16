@@ -6,7 +6,16 @@ defmodule ExtensorInference do
   def load_label(label_file_path) do
     file = File.read!(label_file_path)
     list = String.split(file, "\n") |> Enum.map(fn x -> Regex.replace(~r/\d+ /, x, "") end)
-    list
+  end
+
+  def convert_image(image_path) do
+    img_ext = Path.extname(image_path)
+    if img_ext == ".png" do
+      png_image_path = image_path
+    else
+      png_image = Mf.open(image_path) |> Mf.format("png") |> Mf.save
+      png_image_path = png_image.path
+    end
   end
 
   def inference(model_path, label_file_path, image_path, output_path) do
@@ -24,7 +33,8 @@ defmodule ExtensorInference do
 
     # input(image)の準備  (shape: {1, 256, 256, 3}, type: :floatにする)
     Mf.open(image_path) |> Mf.resize("#{input_height}x#{input_width}") |> Mf.save(in_place: true)
-    {:ok, image} = Im.load(image_path)
+    IO.puts convert_image(image_path)
+    {:ok, image} = Im.load(convert_image(image_path))
     normalized_image_list = for image_pixels_width <- image.pixels, do: Enum.map(image_pixels_width, fn(pixel) -> Tuple.to_list(pixel) |> Enum.map(fn(x) -> x/255 end) end)
     image_pixels = [normalized_image_list]
     input_tensor = %{
@@ -49,7 +59,7 @@ defmodule ExtensorInference do
   def execute_inference do
     model_path = "./pre_trained_model/model.pb"
     label_file_path = "./labels.txt"
-    image_path = "./images/image.png"
+    image_path = "./images/image.jpg"
     output_path = "./output.txt"
     inference(model_path, label_file_path, image_path, output_path)
   end
