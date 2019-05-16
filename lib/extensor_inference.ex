@@ -25,18 +25,11 @@ defmodule ExtensorInference do
     # input(image)の準備  (shape: {1, 256, 256, 3}, type: :floatにする)
     Mf.open(image_path) |> Mf.resize("#{input_height}x#{input_width}") |> Mf.save(in_place: true)
     {:ok, image} = Im.load(image_path)
-    image_pixels = image.pixels
+    normalized_image_list = for image_pixels_width <- image.pixels, do: Enum.map(image_pixels_width, fn(pixel) -> Tuple.to_list(pixel) |> Enum.map(fn(x) -> x/255 end) end)
+    image_pixels = [normalized_image_list]
     input_tensor = %{
       input_info => Et.Tensor.from_list(image_pixels)
     }
-
-    # ダミーデータ
-    # list2d = for _n <- 1..256, do: [0.80, 0.45, 0.34]
-    # list3d = for _n <- 1..256, do: list2d
-    # list4d = [list3d]
-    # input_tensor = %{
-    #   input_info => Et.Tensor.from_list(list4d)
-    # }
 
     # 実行
     output_run_session = Et.Session.run!(graph, input_tensor, [output_info])
@@ -49,6 +42,8 @@ defmodule ExtensorInference do
     prob_list = List.flatten(prob_tensor_results)
     results = List.zip([column_list, prob_list]) |> Enum.map(fn({column, prob}) -> "#{column}   #{prob}\n" end )
     File.write(output_path, results)
+    max_prob = Enum.max(prob_list)
+    List.zip([column_list, prob_list]) |> Enum.map(fn({column, prob}) -> if prob == max_prob, do: IO.puts "#{column}   #{prob}\n" end )
   end
 
   def execute_inference do
