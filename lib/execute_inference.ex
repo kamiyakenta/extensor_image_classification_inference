@@ -4,8 +4,6 @@ defmodule ExecuteInference do
   alias Imagineer, as: Im
   import LoadPreTrainedModel, only: [prepare_trained_model: 0]
 
-  [column_list, [input_info, output_info, input_height, input_width], graph] = prepare_trained_model()
-
   defp convert_image(image_path) do
     img_ext = Path.extname(image_path)
     if img_ext == ".png" do
@@ -19,6 +17,7 @@ defmodule ExecuteInference do
   def inference(image_path) do
     # 毎回読み込むことになる
     [column_list, [input_info, output_info, input_height, input_width], graph] = prepare_trained_model()
+
     Mf.open(image_path) |> Mf.resize("#{input_height}x#{input_width}") |> Mf.save(in_place: true)
     {:ok, image} = Im.load(convert_image(image_path))
     normalized_image_list = for image_pixels_width <- image.pixels, do: Enum.map(image_pixels_width, fn(pixel) -> Tuple.to_list(pixel) |> Enum.map(fn(x) -> x/255 end) end)
