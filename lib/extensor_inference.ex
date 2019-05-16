@@ -11,10 +11,10 @@ defmodule ExtensorInference do
   def convert_image(image_path) do
     img_ext = Path.extname(image_path)
     if img_ext == ".png" do
-      png_image_path = image_path
+      image_path
     else
       png_image = Mf.open(image_path) |> Mf.format("png") |> Mf.save
-      png_image_path = png_image.path
+      png_image.path
     end
   end
 
