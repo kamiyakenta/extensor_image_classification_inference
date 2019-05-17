@@ -3,6 +3,7 @@ defmodule ExecuteInference do
   alias Mogrify, as: Mf
   alias Imagineer, as: Im
   import LoadPreTrainedModel, only: [prepare_trained_model: 0]
+  import InferenceServer, only: [run_inference_server: 1]]
 
   defp convert_image(image_path) do
     img_ext = Path.extname(image_path)
@@ -36,8 +37,10 @@ defmodule ExecuteInference do
   end
 
   def execute_inference do
-    image_paths = Path.wildcard("./images/*")
-    image_paths |> Enum.map(fn(image_path) -> inference(image_path) end)
+    # image_paths = Path.wildcard("./images/*")
+    # image_paths |> Enum.map(fn(image_path) -> inference(image_path) end)
+    image_path = "./images/image.jpg"
+    inference(image_path)
   end
 end
 ExecuteInference.execute_inference()
