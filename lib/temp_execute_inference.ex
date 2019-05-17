@@ -1,8 +1,8 @@
-defmodule ExecuteInference do
+defmodule TempExecuteInference do
   alias Extensor, as: Et
   alias Mogrify, as: Mf
   alias Imagineer, as: Im
-  import LoadPreTrainedModel, only: [load_prepare_file: 0]
+  import TempLoadPreTrainedModel, only: [load_prepare_file: 0]
 
   defp convert_image(image_path) do
     img_ext = Path.extname(image_path)
@@ -40,4 +40,4 @@ defmodule ExecuteInference do
     inference(image_path)
   end
 end
-ExecuteInference.execute_inference()
+TempExecuteInference.execute_inference()

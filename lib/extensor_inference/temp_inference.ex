@@ -1,4 +1,4 @@
-defmodule TestInference do
+defmodule TempTestInference do
   alias Extensor, as: Et
   alias Mogrify, as: Mf
   alias Imagineer, as: Im

@@ -1,4 +1,4 @@
-defmodule LoadPreTrainedModel do
+defmodule TempLoadPreTrainedModel do
   alias Extensor, as: Et
 
   defp load_label(label_file_path) do
