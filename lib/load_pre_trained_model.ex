@@ -19,7 +19,7 @@ defmodule LoadPreTrainedModel do
     _graph = Et.Session.load_frozen_graph!(model_path)
   end
 
-  def prepare_trained_model do
+  def load_prepare_file do
     label_file_path = "./labels.txt"
     io_json_path = "./pre_trained_model/io.json"
     model_path = "./pre_trained_model/model.pb"

@@ -2,7 +2,7 @@ defmodule ExecuteInference do
   alias Extensor, as: Et
   alias Mogrify, as: Mf
   alias Imagineer, as: Im
-  import LoadPreTrainedModel, only: [prepare_trained_model: 0]
+  import LoadPreTrainedModel, only: [load_prepare_file: 0]
 
   defp convert_image(image_path) do
     img_ext = Path.extname(image_path)
@@ -16,7 +16,7 @@ defmodule ExecuteInference do
 
   def inference(image_path) do
     # 毎回読み込むことになる
-    [column_list, [input_info, output_info, input_height, input_width], graph] = prepare_trained_model()
+    [column_list, [input_info, output_info, input_height, input_width], graph] = load_prepare_file()
 
     Mf.open(image_path) |> Mf.resize_to_fill("#{input_height}x#{input_width}") |> Mf.save(in_place: true)
     {:ok, image} = Im.load(convert_image(image_path))
