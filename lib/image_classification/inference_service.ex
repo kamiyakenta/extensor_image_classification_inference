@@ -2,6 +2,7 @@ defmodule ImageClassification.InferenceService do
   alias Extensor, as: Et
   alias Mogrify, as: Mf
   alias Imagineer, as: Im
+  alias ImageClassification.InferenceService, as: IS
   use GenServer
 
   @name :inference_service
@@ -13,7 +14,7 @@ defmodule ImageClassification.InferenceService do
   end
 
   defp start(init \\ []) do
-    GenServer.start_link(ImageClassification.InferenceService, init, name: @name)
+    GenServer.start_link(IS, init, name: @name)
     :ok
   end
 
@@ -46,7 +47,7 @@ defmodule ImageClassification.InferenceService do
     end
   end
 
-  def load_model(%ImageClassification.InferenceService{graph: model_path, label: label_path, io_info: io_json_path}) do
+  def load_model(%IS{graph: model_path, label: label_path, io_info: io_json_path}) do
     # プロセスの立ち上げ
     # {:ok, pid} = Agent.start_link(fn -> %{} end)
     start()
