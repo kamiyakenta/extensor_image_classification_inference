@@ -49,7 +49,6 @@ defmodule ImageClassification.InferenceService do
 
   def load_model(%IS{graph: model_path, label: label_path, io_info: io_json_path}) do
     # プロセスの立ち上げ
-    # {:ok, pid} = Agent.start_link(fn -> %{} end)
     start()
 
     # graphの読み込み
