@@ -27,7 +27,7 @@ defmodule InferenceService do
     {:reply, state, state}
   end
 
-  def handle_cast({:update, new_state}, state) do
+  def handle_cast({:update, new_state}, _state) do
     {:noreply, new_state}
   end
 
