@@ -18,3 +18,4 @@ defmodule ConsignmentInrference do
 end
 
 ConsignmentInrference.consignment_inference()
+# require IEx; IEx.pry
