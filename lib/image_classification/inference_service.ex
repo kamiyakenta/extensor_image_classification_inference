@@ -40,14 +40,11 @@ defmodule ImageClassification.InferenceService do
   end
 
   def handle_cast({:update_image, new_state}, state) do
-    if state |> Enum.at(0) |> Map.get(:input_tensor) do
-      model_omly_state = tl state
-      next_state = model_omly_state |> Enum.into([%{:input_tensor => new_state}])
-      {:noreply, next_state}
-    else
-      next_state = state |> Enum.into([%{:image_path => new_state}])
-      {:noreply, next_state}
-    end
+    f = fn (state) -> if state |> Enum.at(0) |> Map.get(:image), :do( state = tl state) end
+    edit_state = f.(state)
+    input_tensor = load_image(new_state, Enum.at(state, 0))
+    next_state = state |> Enum.into([%{:image => input_tensor}])
+    {:noreply, next_state}
   end
 
   defp convert_image(image_path) do
@@ -87,11 +84,7 @@ defmodule ImageClassification.InferenceService do
 
   end
 
-  def load_image(image_path) do
-    # 準備
-    [input_info, input_height, input_width] = Enum.at(get(), 0)
-
-    # 実行
+  def load_image(image_path, [input_info, input_height, input_width]) do
     Mf.open(image_path)
     |> Mf.resize_to_fill("#{input_height}x#{input_width}")
     |> Mf.save(in_place: true)
