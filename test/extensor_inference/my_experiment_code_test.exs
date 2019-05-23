@@ -21,8 +21,6 @@ defmodule ExtensorInference.MyExperimentCodeTest do
         |> IS.inference()
       end
       result = String.split(capture_io(fun), "   ")
-      # result = ["084.giraffe", "0.9985604882240295"]
-      require IEx; IEx.pry
       assert Enum.at(result, 0) == "084.giraffe"
       assert Enum.at(result, 1)
       |> String.replace("\n", "")
@@ -32,3 +30,4 @@ defmodule ExtensorInference.MyExperimentCodeTest do
 end
 
 # require IEx; IEx.pry
+# iex -S mix test --trace
