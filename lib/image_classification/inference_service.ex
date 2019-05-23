@@ -40,10 +40,15 @@ defmodule ImageClassification.InferenceService do
   end
 
   def handle_cast({:update_image, new_state}, state) do
-    require IEx; IEx.pry
-    f = fn (state) -> if state |> Enum.at(0) |> Map.get(:image), do: (state = tl state) end
-    edit_state = f.(state)
+    delete_image = fn (state) -> if state |> Enum.at(0) |> is_map() do
+        tl state
+      else
+        state
+      end
+    end
+    edit_state = delete_image.(state)
     input_tensor = load_image(new_state, Enum.at(edit_state, 0))
+    require IEx; IEx.pry
     next_state = edit_state |> Enum.into([%{:image => input_tensor}])
     {:noreply, next_state}
   end
