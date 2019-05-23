@@ -1,7 +1,6 @@
 defmodule ExtensorInference.MyExperimentCodeTest do
   use ExUnit.Case, async: true
   import ExUnit.CaptureIO
-  alias ExtensorInference.MyExperimentCode, as: MEC
   alias ImageClassification.InferenceService, as: IS
 
   setup_all do
@@ -28,10 +27,6 @@ defmodule ExtensorInference.MyExperimentCodeTest do
       assert Enum.at(result, 1)
       |> String.replace("\n", "")
       |> String.to_float() > 0.95
-    end
-
-    test "Source code itself result" do
-      assert MEC.my_experiment_code() == :ok
     end
   end
 end
