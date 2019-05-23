@@ -48,7 +48,6 @@ defmodule ImageClassification.InferenceService do
     end
     edit_state = delete_image.(state)
     input_tensor = load_image(new_state, Enum.at(edit_state, 0))
-    require IEx; IEx.pry
     next_state = [%{:image => input_tensor}] ++ edit_state
     {:noreply, next_state}
   end
