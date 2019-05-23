@@ -15,10 +15,10 @@ defmodule ExtensorInference.MyExperimentCodeTest do
     test "example result", %{service: service} do
       assert IS.load_model(service) == :ok
       image_path = "./images/galloping_giraffe.png"
+      image_path
+      |> IS.update_image()
       fun = fn ->
-        image_path
-        |> IS.load_image()
-        |> IS.inference()
+        IS.inference()
       end
       result = String.split(capture_io(fun), "   ")
       assert Enum.at(result, 0) == "084.giraffe"
