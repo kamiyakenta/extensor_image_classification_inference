@@ -11,7 +11,7 @@ defmodule ExtensorInference.MyExperimentCode do
     image_paths = Path.wildcard("./images/**")
     Enum.each(image_paths, fn(image_path) ->
       image_path
-      |> IS.load_image()
+      |> IS.update_image()
       |> IS.inference()
     end)
   end

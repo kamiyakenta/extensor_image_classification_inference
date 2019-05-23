@@ -26,6 +26,10 @@ defmodule ImageClassification.InferenceService do
     GenServer.cast(@name, {:update, new_state})
   end
 
+  defp update_img(new_state) do
+    GenServer.cast(@name, {:update_image, new_state})
+  end
+
   # GenServer Callback functions
   def handle_call(:get, _client, state) do
     {:reply, state, state}
@@ -33,6 +37,21 @@ defmodule ImageClassification.InferenceService do
 
   def handle_cast({:update, new_state}, _state) do
     {:noreply, new_state}
+  end
+
+  def handle_cast({:update_image, new_state}, state) do
+    if state |> Enum.at(0) |> Map.get(:image_path) do
+      model_omly_state = tl state
+      next_state = model_omly_state |> Enum.into([%{:image_path => new_state}])
+      {:noreply, next_state}
+    else
+      next_state = state |> Enum.into([%{:image_path => new_state}])
+      {:noreply, next_state}
+    end
+  end
+
+  def update_image(image_path) do
+    update_img(image_path)
   end
 
   defp convert_image(image_path) do
