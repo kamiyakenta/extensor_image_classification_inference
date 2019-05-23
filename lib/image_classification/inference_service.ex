@@ -92,7 +92,8 @@ defmodule ImageClassification.InferenceService do
   end
 
   def inference() do
-    input_tensor = Enum.at(get(), 0) |> Map.get(:image)
+    input_tensor = Enum.at(get(), 0)
+                   |> Map.get(:image)
     [graph, output_info, column_list] = Enum.at(get(), 2)
 
     output_run_session = Et.Session.run!(graph, input_tensor, [output_info])
