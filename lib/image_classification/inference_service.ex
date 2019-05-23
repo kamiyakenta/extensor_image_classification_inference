@@ -61,18 +61,14 @@ defmodule ImageClassification.InferenceService do
   end
 
   def load_model(%IS{graph: model_path, label: label_path, io_info: io_json_path}) do
-    # プロセスの立ち上げ
     start()
 
-    # graphの読み込み
     graph = Et.Session.load_frozen_graph!(model_path)
 
-    # labelの読み込み
     file = File.read!(label_path)
     column_list = String.split(file, "\n")
                   |> Enum.map(fn x -> Regex.replace(~r/\d+ /, x, "") end)
 
-    # io_infoの読み込み
     io_infos = io_json_path
                |> File.read!()
                |> Poison.decode!()
@@ -96,11 +92,9 @@ defmodule ImageClassification.InferenceService do
   end
 
   def inference() do
-    # 準備
     input_tensor = Enum.at(get(), 0) |> Map.get(:image)
     [graph, output_info, column_list] = Enum.at(get(), 2)
 
-    # 実行
     output_run_session = Et.Session.run!(graph, input_tensor, [output_info])
     prob_tensor_results = Et.Tensor.to_list(output_run_session[output_info])
     prob_list = List.flatten(prob_tensor_results)
