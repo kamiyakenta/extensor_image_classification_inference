@@ -14,9 +14,6 @@ defmodule ExtensorInference.ConsignmentInference do
       |> IS.load_image()
       |> IS.inference()
     end)
-    # image_path = "./images/image.jpg"
-    # input_tensor = IS.load_image(image_path)
-    # IS.inference(input_tensor)
   end
 
 end
