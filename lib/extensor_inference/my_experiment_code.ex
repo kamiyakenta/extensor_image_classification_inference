@@ -1,7 +1,7 @@
-defmodule ExtensorInference.ConsignmentInference do
+defmodule ExtensorInference.MyExperimentCode do
   alias ImageClassification.InferenceService, as: IS
 
-  def consignment_inference do
+  def my_experiment_code do
     model_path = "./pre_trained_model/model.pb"
     label_path = "./labels.txt"
     io_json_path = "./pre_trained_model/io.json"
@@ -18,4 +18,4 @@ defmodule ExtensorInference.ConsignmentInference do
 
 end
 
-ExtensorInference.ConsignmentInference.consignment_inference()
+ExtensorInference.MyExperimentCode.my_experiment_code()
