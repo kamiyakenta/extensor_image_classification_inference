@@ -103,6 +103,5 @@ defmodule ImageClassification.InferenceService do
         )
       end
     )
-    :ok
   end
 end
