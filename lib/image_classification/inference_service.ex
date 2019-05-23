@@ -99,7 +99,7 @@ defmodule ImageClassification.InferenceService do
     |> Enum.map(
       fn({column, prob}) ->
         if prob == max_prob, do: (
-          IO.puts "#{column}   #{prob}\n"
+          IO.puts "#{column}   #{prob}"
         )
       end
     )
