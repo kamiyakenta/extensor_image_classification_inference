@@ -1,4 +1,4 @@
-defmodule ExtensorInference.ConsignmentInrference do
+defmodule ExtensorInference.ConsignmentInference do
   alias ImageClassification.InferenceService, as: IS
 
   def consignment_inference do
@@ -21,4 +21,4 @@ defmodule ExtensorInference.ConsignmentInrference do
 
 end
 
-ExtensorInference.ConsignmentInrference.consignment_inference()
+ExtensorInference.ConsignmentInference.consignment_inference()
