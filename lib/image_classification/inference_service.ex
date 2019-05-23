@@ -40,10 +40,11 @@ defmodule ImageClassification.InferenceService do
   end
 
   def handle_cast({:update_image, new_state}, state) do
-    f = fn (state) -> if state |> Enum.at(0) |> Map.get(:image), :do( state = tl state) end
+    require IEx; IEx.pry
+    f = fn (state) -> if state |> Enum.at(0) |> Map.get(:image), do: (state = tl state) end
     edit_state = f.(state)
-    input_tensor = load_image(new_state, Enum.at(state, 0))
-    next_state = state |> Enum.into([%{:image => input_tensor}])
+    input_tensor = load_image(new_state, Enum.at(edit_state, 0))
+    next_state = edit_state |> Enum.into([%{:image => input_tensor}])
     {:noreply, next_state}
   end
 
@@ -94,9 +95,10 @@ defmodule ImageClassification.InferenceService do
     %{ input_info => Et.Tensor.from_list(image_pixels) }
   end
 
-  def inference(input_tensor) do
+  def inference() do
     # 準備
-    [graph, output_info, column_list] = Enum.at(get(), 1)
+    input_tensor = Enum.at(get(), 0) |> Map.get(:image)
+    [graph, output_info, column_list] = Enum.at(get(), 2)
 
     # 実行
     output_run_session = Et.Session.run!(graph, input_tensor, [output_info])
