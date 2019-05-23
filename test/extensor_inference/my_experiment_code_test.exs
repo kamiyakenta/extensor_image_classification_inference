@@ -17,10 +17,8 @@ defmodule ExtensorInference.MyExperimentCodeTest do
       image_path = "./images/galloping_giraffe.png"
       image_path
       |> IS.update_image()
-      fun = fn ->
-        IS.inference()
-      end
-      result = String.split(capture_io(fun), "   ")
+      output_inference = fn -> IS.inference() end
+      result = String.split(capture_io(output_inference), "   ")
       assert Enum.at(result, 0) == "084.giraffe"
       assert Enum.at(result, 1)
       |> String.replace("\n", "")
