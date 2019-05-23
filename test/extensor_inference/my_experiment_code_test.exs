@@ -16,7 +16,6 @@ defmodule ExtensorInference.MyExperimentCodeTest do
     test "example result", %{service: service} do
       assert IS.load_model(service) == :ok
       image_path = "./images/galloping_giraffe.png"
-      require IEx; IEx.pry
       fun = fn ->
         image_path
         |> IS.load_image()
@@ -24,9 +23,10 @@ defmodule ExtensorInference.MyExperimentCodeTest do
       end
       result = String.split(capture_io(fun), "   ")
       # result = ["084.giraffe", "0.9985604882240295"]
-
+      require IEx; IEx.pry
       assert Enum.at(result, 0) == "084.giraffe"
       assert Enum.at(result, 1)
+      |> String.replace("\n", "")
       |> String.to_float() > 0.95
     end
 
