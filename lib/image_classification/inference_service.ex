@@ -96,6 +96,13 @@ defmodule ImageClassification.InferenceService do
     prob_list = List.flatten(prob_tensor_results)
     max_prob = Enum.max(prob_list)
     List.zip([column_list, prob_list])
-    |> Enum.map(fn({column, prob}) -> if prob == max_prob, do: IO.puts "#{column}   #{prob}\n" end )
+    |> Enum.map(
+      fn({column, prob}) ->
+        if prob == max_prob, do: (
+          IO.puts "#{column}   #{prob}\n"
+        )
+      end
+    )
+    :ok
   end
 end
