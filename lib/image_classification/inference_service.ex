@@ -33,7 +33,9 @@ defmodule ImageClassification.InferenceService do
   # GenServer Callback functions
   def handle_call(:get, _client, state) do
     inference(Enum.at(state, 0) |> Map.get(:image), Enum.at(state, 2))
-    {:reply, state, state}
+    delete_image = fn (state) -> if state |> Enum.at(0) |> is_map(), do: tl state end
+    edit_state = delete_image.(state)
+    {:reply, edit_state, edit_state}
   end
 
   def handle_cast({:update_model, new_state}, _state) do
@@ -41,15 +43,8 @@ defmodule ImageClassification.InferenceService do
   end
 
   def handle_cast({:update_image, new_state}, state) do
-    delete_image = fn (state) -> if state |> Enum.at(0) |> is_map() do
-        tl state # 画像読み込みの2回目以降
-      else
-        state # 画像読み込みの1回目
-      end
-    end
-    edit_state = delete_image.(state)
-    input_tensor = load_image(new_state, Enum.at(edit_state, 0))
-    next_state = [%{:image => input_tensor}] ++ edit_state
+    input_tensor = load_image(new_state, Enum.at(state, 0))
+    next_state = [%{:image => input_tensor}] ++ state
     {:noreply, next_state}
   end
 
