@@ -22,8 +22,8 @@ defmodule ImageClassification.InferenceService do
     GenServer.call(@name, :get)
   end
 
-  defp update(new_state) do
-    GenServer.cast(@name, {:update, new_state})
+  defp update_model(new_state) do
+    GenServer.cast(@name, {:update_model, new_state})
   end
 
   def update_image(new_state) do
@@ -32,18 +32,19 @@ defmodule ImageClassification.InferenceService do
 
   # GenServer Callback functions
   def handle_call(:get, _client, state) do
+    inference(Enum.at(state, 0) |> Map.get(:image), Enum.at(state, 2))
     {:reply, state, state}
   end
 
-  def handle_cast({:update, new_state}, _state) do
+  def handle_cast({:update_model, new_state}, _state) do
     {:noreply, new_state}
   end
 
   def handle_cast({:update_image, new_state}, state) do
     delete_image = fn (state) -> if state |> Enum.at(0) |> is_map() do
-        tl state
+        tl state # 画像読み込みの2回目以降
       else
-        state
+        state # 画像読み込みの1回目
       end
     end
     edit_state = delete_image.(state)
@@ -81,7 +82,7 @@ defmodule ImageClassification.InferenceService do
     input_height = Enum.at(io_infos["inputShape"], 1)
     input_width = Enum.at(io_infos["inputShape"], 2)
 
-    update([[input_info, input_height, input_width], [graph, output_info, column_list]])
+    update_model([[input_info, input_height, input_width], [graph, output_info, column_list]])
 
   end
 
@@ -95,11 +96,7 @@ defmodule ImageClassification.InferenceService do
     %{ input_info => Et.Tensor.from_list(image_pixels) }
   end
 
-  def inference() do
-    input_tensor = Enum.at(get(), 0)
-                   |> Map.get(:image)
-    [graph, output_info, column_list] = Enum.at(get(), 2)
-
+  def inference(input_tensor, [graph, output_info, column_list]) do
     output_run_session = Et.Session.run!(graph, input_tensor, [output_info])
     prob_tensor_results = Et.Tensor.to_list(output_run_session[output_info])
     prob_list = List.flatten(prob_tensor_results)
@@ -112,5 +109,9 @@ defmodule ImageClassification.InferenceService do
         )
       end
     )
+  end
+
+  def get_inference do
+    get()
   end
 end
