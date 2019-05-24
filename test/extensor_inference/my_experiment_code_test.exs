@@ -17,7 +17,8 @@ defmodule ExtensorInference.MyExperimentCodeTest do
       image_path
       |> IS.update_image()
       IS.get_inference()
-      [{column, prob}] = List.last(IS.get())
+      [{column, prob}] = IS.get()
+                         |> List.last()
       assert column == "084.giraffe"
       assert prob > 0.95
   end
