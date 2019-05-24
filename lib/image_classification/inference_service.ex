@@ -30,6 +30,10 @@ defmodule ImageClassification.InferenceService do
     GenServer.cast(@name, {:update_image, new_state})
   end
 
+  def update_result(new_state) do
+    GenServer.cast(@name, {:update_result, new_state})
+  end
+
   # GenServer Callback functions
   def handle_call(:get, _client, state) do
     inference(Enum.at(state, 0) |> Map.get(:image), Enum.at(state, 2))
@@ -45,6 +49,11 @@ defmodule ImageClassification.InferenceService do
   def handle_cast({:update_image, new_state}, state) do
     input_tensor = load_image(new_state, Enum.at(state, 0))
     next_state = [%{:image => input_tensor}] ++ state
+    {:noreply, next_state}
+  end
+
+  def handle_cast({:update_result, new_state}, state) do
+    next_state = state ++ [new_state]
     {:noreply, next_state}
   end
 
@@ -101,6 +110,7 @@ defmodule ImageClassification.InferenceService do
       fn({column, prob}) ->
         if prob == max_prob, do: (
           IO.puts "#{column}   #{prob}"
+          update_result({column, prob})
         )
       end
     )

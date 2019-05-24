@@ -12,7 +12,7 @@ defmodule ExtensorInference.MyExperimentCode do
     Enum.each(image_paths, fn(image_path) ->
       image_path
       |> IS.update_image()
-      IO.puts IS.get_inference()
+      IS.get_inference()
     end)
   end
 
