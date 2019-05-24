@@ -18,8 +18,12 @@ defmodule ImageClassification.InferenceService do
     :ok
   end
 
-  defp get() do
+  def get() do
     GenServer.call(@name, :get)
+  end
+
+  def get_inference() do
+    GenServer.call(@name, :get_inference)
   end
 
   defp update_model(new_state) do
@@ -30,12 +34,16 @@ defmodule ImageClassification.InferenceService do
     GenServer.cast(@name, {:update_image, new_state})
   end
 
-  def update_result(new_state) do
+  defp update_result(new_state) do
     GenServer.cast(@name, {:update_result, new_state})
   end
 
   # GenServer Callback functions
   def handle_call(:get, _client, state) do
+    {:reply, state, state}
+  end
+
+  def handle_call(:get_inference, _client, state) do
     inference(Enum.at(state, 0) |> Map.get(:image), Enum.at(state, 2))
     delete_image = fn (state) -> if state |> Enum.at(0) |> is_map(), do: tl state end
     edit_state = delete_image.(state)
@@ -54,6 +62,7 @@ defmodule ImageClassification.InferenceService do
 
   def handle_cast({:update_result, new_state}, state) do
     next_state = state ++ [new_state]
+    require IEx; IEx.pry
     {:noreply, next_state}
   end
 
@@ -110,13 +119,9 @@ defmodule ImageClassification.InferenceService do
       fn({column, prob}) ->
         if prob == max_prob, do: (
           IO.puts "#{column}   #{prob}"
-          update_result({column, prob})
+          update_result([{column, prob}])
         )
       end
     )
-  end
-
-  def get_inference do
-    get()
   end
 end
