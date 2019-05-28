@@ -1,48 +1,86 @@
 defmodule ImageClassification.InferenceService do
+  @moduledoc """
+  This module holds and executes necessary data for inference in the process.
+  """
+
   alias Extensor, as: Et
   alias Mogrify, as: Mf
   alias Imagineer, as: Im
   alias ImageClassification.InferenceService, as: IS
-  use GenServer
 
   @name :inference_service
 
+  @typedoc """
+  Type is {type: data_type, shape: tuple, data: binary}.
+  """
+  @type et_tensor :: Extensor.Tensor.t
+
+  @typedoc """
+  This is the type of this module's struct.
+  """
+  @type inference_service :: %IS{graph: String.t, label: String.t, io_info: String.t}
+
+  @behaviour GenServer
+
   defstruct [:graph, :label, :io_info]
 
+  @doc """
+  GenServer.init/1 callback.
+  """
+  @impl GenServer
   def init(init_arg) do
     {:ok, init_arg}
   end
 
-  defp start(init \\ []) do
-    GenServer.start_link(IS, init, name: @name)
-    :ok
-  end
+  @doc """
+  Start our queue and link it.
+  This is a function that wraps the helper function.
+  """
+  def start(init \\ []), do: GenServer.start_link(IS, init, name: @name)
 
-  def get() do
-    GenServer.call(@name, :get)
-  end
+  @doc """
+  Return state without doing any processing.
+  This is a function that wraps the GenServer Call function.
+  """
+  def get(), do: GenServer.call(@name, :get)
 
-  def get_inference() do
-    GenServer.call(@name, :get_inference)
-  end
+  @doc """
+  Process inference and return state.
+  This is a function that wraps the GenServer Call function.
+  """
+  def get_inference(), do: GenServer.call(@name, :get_inference)
 
-  defp update_model(new_state) do
-    GenServer.cast(@name, {:update_model, new_state})
-  end
+  @doc """
+  Cast data processed by load_model function to state.
+  This is a function that wraps the GenServer Cast function.
+  """
+  def update_model(new_state), do: GenServer.cast(@name, {:update_model, new_state})
 
-  def update_image(new_state) do
-    GenServer.cast(@name, {:update_image, new_state})
-  end
+  @doc """
+  Pass image_path to GenServer Callback function.
+  This is a function that wraps the GenServer Cast function.
+  """
+  def update_image(new_state), do: GenServer.cast(@name, {:update_image, new_state})
 
-  defp update_result(new_state) do
-    GenServer.cast(@name, {:update_result, new_state})
-  end
+  @doc """
+  Pass the result of inference to state.
+  This is a function that wraps the GenServer Cast function.
+  """
+  def update_result(new_state), do: GenServer.cast(@name, {:update_result, new_state})
 
-  # GenServer Callback functions
+  @doc """
+  This is GenServer Callback functions.
+  """
+  @impl GenServer
   def handle_call(:get, _client, state) do
     {:reply, state, state}
   end
 
+  @doc """
+  Execute inference and remove the used image from state.
+  This is GenServer Callback functions.
+  """
+  @impl GenServer
   def handle_call(:get_inference, _client, state) do
     inference(Enum.at(state, 0) |> Map.get(:image), Enum.at(state, 2))
     delete_image = fn (state) -> if state |> Enum.at(0) |> is_map(), do: tl state end
@@ -50,23 +88,40 @@ defmodule ImageClassification.InferenceService do
     {:reply, edit_state, edit_state}
   end
 
+  @doc """
+  This is GenServer Callback functions.
+  """
+  @impl GenServer
   def handle_cast({:update_model, new_state}, _state) do
     {:noreply, new_state}
   end
 
+  @doc """
+  Call load_image function and pass the resulting input_tensor to state.
+  This is GenServer Callback functions.
+  """
+  @impl GenServer
   def handle_cast({:update_image, new_state}, state) do
     input_tensor = load_image(new_state, Enum.at(state, 0))
     next_state = [%{:image => input_tensor}] ++ state
     {:noreply, next_state}
   end
 
+  @doc """
+  Add result of inference to state
+  This is GenServer Callback functions.
+  """
+  @impl GenServer
   def handle_cast({:update_result, new_state}, state) do
     next_state = state ++ [new_state]
-    require IEx; IEx.pry
     {:noreply, next_state}
   end
 
-  defp convert_image(image_path) do
+  @doc """
+  Convert to .png file.
+  """
+  @spec convert_image(String.t) :: String.t
+  def convert_image(image_path) do
     img_ext = Path.extname(image_path)
     if img_ext == ".png" do
       image_path
@@ -78,6 +133,11 @@ defmodule ImageClassification.InferenceService do
     end
   end
 
+  @doc """
+  Receive the structure of this process and find the necessary data.
+  It also executes start function and update_model function.
+  """
+  @spec load_model(inference_service) :: :ok
   def load_model(%IS{graph: model_path, label: label_path, io_info: io_json_path}) do
     start()
 
@@ -99,16 +159,30 @@ defmodule ImageClassification.InferenceService do
 
   end
 
+  @doc """
+  Create input_tensor using extensor
+  """
+  @spec load_image(String.t, [String.t | integer | integer]) :: %{String.t => et_tensor}
   def load_image(image_path, [input_info, input_height, input_width]) do
     Mf.open(image_path)
     |> Mf.resize_to_fill("#{input_height}x#{input_width}")
     |> Mf.save(in_place: true)
     {:ok, image} = Im.load(convert_image(image_path))
-    normalized_image_list = for image_pixels_width <- image.pixels, do: Enum.map(image_pixels_width, fn(pixel) -> Tuple.to_list(pixel) |> Enum.map(fn(x) -> x/255 end) end)
-    image_pixels = [normalized_image_list]
+    normalized_image = Enum.map(image.pixels, fn(image_pixels_width) ->
+      Enum.map(image_pixels_width, fn(pixel) ->
+        Tuple.to_list(pixel) |> Enum.map(fn(x) ->
+          x/255
+        end)
+      end)
+    end)
+    image_pixels = [normalized_image]
     %{ input_info => Et.Tensor.from_list(image_pixels) }
   end
 
+  @doc """
+  After executing inference using the extensor, pass the result to the update_result function.
+  """
+  @spec inference(%{String.t => et_tensor}, [reference | String.t | [String.t]]) :: [nil | :ok]
   def inference(input_tensor, [graph, output_info, column_list]) do
     output_run_session = Et.Session.run!(graph, input_tensor, [output_info])
     prob_tensor_results = Et.Tensor.to_list(output_run_session[output_info])
