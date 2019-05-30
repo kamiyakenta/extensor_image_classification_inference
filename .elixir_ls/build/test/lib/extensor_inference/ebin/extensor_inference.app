@@ -1,0 +1,11 @@
+{application,extensor_inference,
+             [{applications,[kernel,stdlib,elixir,logger,runtime_tools,
+                             toolshed,ring_logger,dotenv,poison,mogrify,
+                             imagineer,extensor,shoehorn]},
+              {description,"extensor_inference"},
+              {modules,['Elixir.ExtensorInference.Application',
+                        'Elixir.ExtensorInference.MyExperimentCode',
+                        'Elixir.ImageClassification.InferenceService']},
+              {registered,[]},
+              {vsn,"0.1.0"},
+              {mod,{'Elixir.ExtensorInference.Application',[]}}]}.

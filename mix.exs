@@ -12,7 +12,26 @@ defmodule ExtensorInference.MixProject do
       start_permanent: Mix.env() == :prod,
       build_embedded: true,
       aliases: [loadconfig: [&bootstrap/1]],
-      deps: deps()
+      deps: deps(),
+      dialyzer: [flags: [:error_handling,
+                         :no_behaviours,
+                         :no_contracts,
+                         :no_fail_call,
+                         :no_fun_app,
+                         :no_improper_lists,
+                         :no_match,
+                         :no_missing_calls,
+                         :no_opaque,
+                         :no_return,
+                         :no_undefined_callbacks,
+                         :no_unused,
+                         :race_conditions,
+                         :underspecs,
+                         :unknown,
+                         :unmatched_returns,
+                        #  :overspecs,
+                        #  :specdiffs
+                        ]]
     ]
   end
 
@@ -53,7 +72,7 @@ defmodule ExtensorInference.MixProject do
       {:nerves_system_bbb, "~> 2.0", runtime: false, targets: :bbb},
       {:nerves_system_x86_64, "~> 1.6", runtime: false, targets: :x86_64},
       {:extensor, "~> 0.1"},
-      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false},
       {:dotenv, "~> 3.0"},
       {:poison, "~> 4.0"},
       {:mogrify, "~> 0.7.2"},

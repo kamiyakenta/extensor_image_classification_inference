@@ -15,6 +15,7 @@ defmodule ExtensorInference.MyExperimentCode do
       :ok
   """
 
+  @spec my_experiment_code() :: :ok
   def my_experiment_code do
     model_path = "./pre_trained_model/model.pb"
     label_path = "./labels.txt"
