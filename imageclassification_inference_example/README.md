@@ -16,5 +16,5 @@ mix compile
 3.Run main function.
 ```
 iex -S mix
-ImageclassificationInferenceExample.execute_inference()
+iex(1)> ImageclassificationInferenceExample.execute_inference()
 ```

@@ -1,2 +1,4 @@
 model/
 imageclassification_inference_example
+deps/
+mix.lock
