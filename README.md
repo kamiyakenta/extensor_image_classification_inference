@@ -13,3 +13,8 @@ imageclassification＿inference_example : サンプルコード
 [README.md(imageclassification_inference_example)](https://github.com/kamiyakenta/extensor_imageclassification_inference/tree/master/imageclassification_inference_example#imageclassification-inference-example)
 
 に記載
+
+```
+brew install imagemagick
+```
+が必要
